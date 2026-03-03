@@ -1,8 +1,12 @@
 export default function handler(req, res) {
-  const authHeader = req.headers["authorization"];
+  const authHeader =
+    req.headers["authorization"] ||
+    req.headers["Authentication"] ||
+    req.headers["authentication"];
+
   const secret = process.env.API_SECRET;
 
-  if (!authHeader || authHeader !== `Bearer ${secret}`) {
+  if (!authHeader || !authHeader.includes(secret)) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
