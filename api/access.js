@@ -6,9 +6,6 @@ export default function handler(req, res) {
 
   const secret = process.env.API_SECRET;
 
-  if (!authHeader || !authHeader.includes(secret)) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
 
   const email = req.query.email?.toLowerCase();
 
