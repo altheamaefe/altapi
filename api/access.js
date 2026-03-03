@@ -1,22 +1,28 @@
 export default function handler(req, res) {
   const authHeader = req.headers["authorization"];
+  const secret = process.env.API_SECRET;
 
-  // Expecting: Authorization: Bearer YOUR_SECRET_KEY
-  if (!authHeader || authHeader !== "Bearer AE_SECRET_123") {
+  if (!authHeader || authHeader !== `Bearer ${secret}`) {
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const email = req.query.email;
+  const email = req.query.email?.toLowerCase();
 
-  if (email === "vip@test.com") {
+  const members = {
+    "bronze@aetest.com": "bronze",
+    "silver@aetest.com": "silver",
+    "gold@aetest.com": "gold"
+  };
+
+  if (members[email]) {
     return res.status(200).json({
-      allowed: true,
-      tier: "VIP"
+      membership: "yes",
+      tier: members[email]
     });
   }
 
   return res.status(200).json({
-    allowed: false,
-    tier: "NONE"
+    membership: "no",
+    tier: null
   });
 }
